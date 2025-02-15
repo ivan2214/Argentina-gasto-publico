@@ -2,14 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SelectYear } from "@/components/SelectYear";
 import { BreadCrumbDynamic } from "@/components/breadcumb-dynamic";
 import { Chart } from "./components/chart";
-
-const data = [
-  { name: "Servicios Sociales", value: 45 },
-  { name: "Servicios Económicos", value: 25 },
-  { name: "Administración Gubernamental", value: 15 },
-  { name: "Servicios de Defensa y Seguridad", value: 10 },
-  { name: "Deuda Pública", value: 5 },
-];
+import { getDestinoGasto } from "@/action/a-que-se-destina-el-gasto";
 
 type SearchParams = Promise<{ year?: string }>;
 
@@ -23,6 +16,10 @@ export default async function AQueSeDestinaElGasto({
   if (!year) {
     year = new Date().getFullYear().toString();
   }
+
+  const { data } = await getDestinoGasto(year);
+
+  if (!data) return <div>Loading...</div>;
 
   return (
     <main className="container mx-auto px-4 py-8">

@@ -5,7 +5,7 @@ import { Chart } from "./components/chart";
 import { getIngresoEgresoPIB } from "@/action/ingreso-egreso-sobre-el-pib";
 
 export default async function CuantoIngresaYCuantoSeGasta() {
-  const data = await getIngresoEgresoPIB();
+  const { data } = await getIngresoEgresoPIB();
 
   if (!data) return <div>Loading...</div>;
 

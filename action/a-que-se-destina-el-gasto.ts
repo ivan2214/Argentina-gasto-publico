@@ -1,13 +1,13 @@
 "use server";
 
-import type { EntidadPresupuestaria } from "@/types";
+import type { AQueSeDestinaElGasto } from "@/types";
 
 const URL =
-  "https://www.presupuestoabierto.gob.ar/sici/rest-api/reporte/quien-gasta";
+  "https://www.presupuestoabierto.gob.ar/sici/rest-api/reporte/a-que-se-destina-el-gasto";
 
-export async function getPresupuesto(
-  year: string
-): Promise<{ data: EntidadPresupuestaria[] | null }> {
+export async function getDestinoGasto(year: string): Promise<{
+  data: AQueSeDestinaElGasto[] | null;
+}> {
   try {
     const response = await fetch(`${URL}/${year}`, {
       next: { revalidate: 3600 },

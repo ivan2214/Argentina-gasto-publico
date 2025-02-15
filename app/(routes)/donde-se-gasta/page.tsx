@@ -1,15 +1,8 @@
-"use client";
-
-import { useState } from "react";
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+import { SelectYear } from "@/components/SelectYear";
+import { getDondeSeGasta } from "@/action/donde-se-gasta";
+import { ArgentinaMapChart } from "@/components/argentina-map-chart";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/countries/argentina/argentina-provinces.json";
@@ -21,51 +14,50 @@ const data = [
   // Add more data for other provinces
 ];
 
-export default function DondeSeGasta() {
-  const [year, setYear] = useState(new Date().getFullYear().toString());
+type SearchParams = Promise<{ year?: string }>;
+
+export default async function DondeSeGasta({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  let { year } = await searchParams;
+
+  if (!year) {
+    year = new Date().getFullYear().toString();
+  }
+
+  const { data } = await getDondeSeGasta(year);
+
+  if (!data) return <div>Loading...</div>;
+
+  const response = await fetch(
+    "https://www.presupuestoabierto.gob.ar/sici/json/argentina.json"
+  );
+  const geoData = await response.json();
 
   return (
     <main className="container mx-auto px-4 py-8">
+      {/* <BreadCrumbDynamic
+        links={[
+          {
+            href: "/",
+            label: "Inicio",
+          },
+          {
+            href: `/donde-se-gasta?year=${year}`,
+            label: `Donde se gasta en ${year}`,
+          },
+        ]}
+      /> */}
       <h1 className="mb-8 font-bold text-3xl">¿Dónde se gasta?</h1>
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Gastos por ubicación geográfica</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select value={year} onValueChange={setYear}>
-            <SelectTrigger className="mb-4 w-[180px]">
-              <SelectValue placeholder="Seleccionar año" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="2023">2023</SelectItem>
-              <SelectItem value="2024">2024</SelectItem>
-              <SelectItem value="2025">2025</SelectItem>
-            </SelectContent>
-          </Select>
-          <ComposableMap
-            projection="geoAzimuthalEqualArea"
-            projectionConfig={{
-              rotate: [58, 20, 0],
-              scale: 600,
-            }}
-          >
-            <Geographies geography={geoUrl}>
-              {({ geographies }) =>
-                geographies.map((geo) => {
-                  const d = data.find((s) => s.id === geo.id);
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={
-                        d ? `rgba(0, 100, 0, ${d.value / 5000000})` : "#EEE"
-                      }
-                    />
-                  );
-                })
-              }
-            </Geographies>
-          </ComposableMap>
+          <SelectYear defaultValue={year} />
+          <ArgentinaMapChart data={data} geoData={geoData} />
         </CardContent>
       </Card>
     </main>

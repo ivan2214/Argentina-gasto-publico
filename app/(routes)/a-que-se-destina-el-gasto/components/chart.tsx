@@ -1,42 +1,56 @@
 "use client";
+import { LabelList, Pie, PieChart } from "recharts";
 import {
-  Pie,
-  PieChart,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import type { AQueSeDestinaElGasto } from "@/types";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
+const chartConfig = {
+  ejecutado: {
+    label: "ejecutado",
+  },
+  presupuestado: {
+    label: "presupuestado",
+  },
+  finalidad: {
+    label: "finalidad",
+    color: "var(--chart-1)",
+  },
+  funcion: {
+    label: "funcion",
+    color: "var(--chart-2)",
+  },
+} satisfies ChartConfig;
 
 interface ChartProps {
-  data: { name: string; value: number }[];
+  data: AQueSeDestinaElGasto[];
 }
 
 export const Chart: React.FC<ChartProps> = ({ data }) => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ChartContainer
+      config={chartConfig}
+      className="mx-auto aspect-square max-h-[250px] [&_.recharts-text]:fill-background"
+    >
       <PieChart>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          outerRadius={150}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {data.map((entry, index) => (
-            <Cell
-              key={`cell-${entry.value}`}
-              fill={COLORS[index % COLORS.length]}
-            />
-          ))}
+        <ChartTooltip
+          content={<ChartTooltipContent nameKey="ejecutado" hideLabel />}
+        />
+        <Pie data={data} dataKey="finalidad" type="category">
+          <LabelList
+            dataKey="ejecutado"
+            className="fill-background"
+            stroke="none"
+            fontSize={12}
+            formatter={(value: keyof typeof chartConfig) =>
+              chartConfig[value]?.label
+            }
+          />
         </Pie>
-        <Tooltip />
-        <Legend />
       </PieChart>
-    </ResponsiveContainer>
+    </ChartContainer>
   );
 };

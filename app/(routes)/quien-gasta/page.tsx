@@ -18,7 +18,7 @@ export default async function QuienGasta({
     year = new Date().getFullYear().toString();
   }
 
-  const data = await getPresupuesto(year);
+  const { data } = await getPresupuesto(year);
 
   if (!data) return <div>Loading...</div>;
 
