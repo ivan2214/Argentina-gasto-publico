@@ -45,6 +45,11 @@ const destacados = [
     description: "Explorador de gastos por apertura programatica",
     link: `/para-que-se-gasta?year=${new Date().getFullYear()}`,
   },
+  {
+    title: "¿Cuanto se lleva gastado del presupuesto?",
+    description: "Gastos y recursos en porcentajes del presupuesto",
+    link: `/cuanto-se-lleva-gastado-del-presupuesto?year=${new Date().getFullYear()}`,
+  },
 ];
 
 export default function Home() {

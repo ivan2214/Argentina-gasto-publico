@@ -1,13 +1,13 @@
-import { SelectYear } from "../../../components/SelectYear";
-import { BreadCrumbDynamic } from "@/components/breadcumb-dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SelectYear } from "@/components/SelectYear";
+import { BreadCrumbDynamic } from "@/components/breadcumb-dynamic";
 import { Chart } from "./components/chart";
-import { processSpendingData } from "@/lib/processData";
 import { getPresupuesto } from "@/action/quien-gasta";
+import { processSpendingData } from "@/lib/processData";
 
 type SearchParams = Promise<{ year?: string }>;
 
-export default async function QuienGasta({
+export default async function CuantoSeLlevaGastadoDelPresupuesto({
   searchParams,
 }: {
   searchParams: SearchParams;
@@ -22,7 +22,7 @@ export default async function QuienGasta({
 
   if (!data) return <div>Loading...</div>;
 
-  const { topSpenders } = processSpendingData(data);
+  const { totals } = processSpendingData(data);
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -33,8 +33,8 @@ export default async function QuienGasta({
             label: "Inicio",
           },
           {
-            href: `/quien-gasta?year=${year}`,
-            label: `Quien gasta en ${year}`,
+            href: `/cuanto-se-lleva-gastado-del-presupuesto?year=${year}`,
+            label: `Cuanto se lleva gastado del presupuesto en ${year}`,
           },
         ]}
       />
@@ -48,7 +48,7 @@ export default async function QuienGasta({
         </CardHeader>
         <CardContent>
           <SelectYear defaultValue={year} />
-          <Chart data={topSpenders} />
+          <Chart data={totals} />
         </CardContent>
       </Card>
     </main>
