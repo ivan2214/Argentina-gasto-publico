@@ -87,7 +87,7 @@ export interface GeojsonProvincias {
   features: Feature[];
 }
 
-interface Feature {
+export interface Feature {
   type: string;
   properties: Properties;
   geometry: Geometry;
