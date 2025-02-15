@@ -1,19 +1,21 @@
 "use server";
 
-import type { AQueSeDestinaElGasto } from "@/types";
+import type { DeDondeVienenLosRecursos } from "@/types";
 
 const URL = "https://www.presupuestoabierto.gob.ar/sici/rest-api/reporte";
-const PATH = "a-que-se-destina-el-gasto";
+const PATH = "de-donde-vienen-los-recursos";
 
 const URL_WITH_PATH = `${URL}/${PATH}`;
 
-export async function getAqueSeDestinaElGasto(year: string): Promise<{
-	data: AQueSeDestinaElGasto[] | null;
+export async function getDeDondeVienenLosRecursos(year: string): Promise<{
+	data: DeDondeVienenLosRecursos[] | null;
 }> {
 	try {
 		const response = await fetch(`${URL_WITH_PATH}/${year}`, {
 			next: { revalidate: 3600 },
 		});
+
+		console.log(response);
 
 		if (!response.ok) {
 			throw new Error("Failed to fetch data");
