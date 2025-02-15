@@ -1,19 +1,13 @@
 "use client";
-
-import type React from "react";
 import { useState, useMemo } from "react";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
+import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
 import { scaleLinear } from "d3-scale";
 import { geoPath, geoMercator } from "d3-geo";
 import { rgb } from "d3-color";
 
 import type { DondeSeGasta, GeoData, GeojsonProvincias } from "@/types";
 import { feature } from "topojson-client";
+import { formatNumber, removeAccents } from "@/lib/utils";
 
 interface ArgentinaMapChartProps {
   data: DondeSeGasta[];
@@ -26,46 +20,48 @@ export function ArgentinaMapChart({ data, geoData }: ArgentinaMapChartProps) {
 
   const geojsonProvincias = feature(geoData, geoData.objects.provincias);
 
-  const { colorScale, path, maxValue, minValue } = useMemo(() => {
-    if (!data || data.length === 0 || !geoData || !geoData.objects.provincias) {
-      return { colorScale: null, minValue: 0, maxValue: 0, path: null };
-    }
+  const { opacityScale, path } = useMemo(() => {
+    if (!data || !geoData?.objects.provincias)
+      return { opacityScale: null, path: null };
 
     const ejecutadoValues = data
       .map((d) => d.ejecutado)
-      .filter((value): value is number => typeof value === "number");
+      .filter((v): v is number => typeof v === "number");
 
-    if (ejecutadoValues.length === 0) {
-      console.log("data", data);
-
-      return { colorScale: null, minValue: 0, maxValue: 0, path: null };
-    }
+    if (!ejecutadoValues.length) return { opacityScale: null, path: null };
 
     const minValue = Math.min(...ejecutadoValues);
     const maxValue = Math.max(...ejecutadoValues);
 
-    const colorScale = scaleLinear<string>()
+    // Escala de opacidad específica para cada provincia entre 30% y 100%
+    const opacityScale = scaleLinear()
       .domain([minValue, maxValue])
-      .range(["var(--chart-1)", "var(--chart-5)"]); // Corregir paréntesis
+      .range([0.3, 1])
+      .clamp(true);
 
     const projection = geoMercator().fitSize([800, 800], geojsonProvincias);
     const path = geoPath().projection(projection);
 
-    return { colorScale, minValue, maxValue, path };
+    return { opacityScale, minValue, maxValue, path };
   }, [data, geoData]);
 
-  const handleMouseEnter = (e: React.MouseEvent, provincia: DondeSeGasta) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setTooltipContent(`
-    <strong>${provincia.provincia}</strong><br/>
-    Ejecutado: $${provincia.ejecutado.toLocaleString()}<br/>
-    Presupuestado: $${provincia.presupuestado.toLocaleString()}
-  `);
-    setTooltipPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
+  // Función para obtener color con opacidad
+  const getColorWithOpacity = (value: number) => {
+    if (!opacityScale) return "var(--chart-2)";
 
-  const handleMouseLeave = () => {
-    setTooltipContent(null);
+    // Convertir color base a RGB
+    let baseColor = "var(--chart-2)";
+    if (typeof window !== "undefined") {
+      baseColor = window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue("--chart-2");
+    }
+
+    const color = rgb(baseColor);
+    if (!color) return "var(--chart-2)";
+
+    // Aplicar opacidad calculada
+    return `rgba(${color.r}, ${color.g}, ${color.b}, ${opacityScale(value)})`;
   };
 
   const chartConfig: ChartConfig = {
@@ -79,7 +75,7 @@ export function ArgentinaMapChart({ data, geoData }: ArgentinaMapChartProps) {
     },
   };
 
-  if (!colorScale || !path || !geoData || !geoData.objects.provincias) {
+  if (!path || !geoData || !geoData.objects.provincias) {
     return (
       <ChartContainer
         config={chartConfig}
@@ -93,70 +89,68 @@ export function ArgentinaMapChart({ data, geoData }: ArgentinaMapChartProps) {
   const features = (geojsonProvincias as unknown as GeojsonProvincias)
     .features || [geojsonProvincias];
 
-  const getColor = (
-    value: number,
-    min: number,
-    max: number,
-    baseColor: string
-  ) => {
-    const colorScale = scaleLinear<number>().domain([min, max]).range([0.4, 1]); // El rango de opacidad, 0.4 es más transparente, 1 es completamente opaco
-    const colorValue = colorScale(value); // Esto da un valor entre 0.4 y 1
-
-    const baseRgb = rgb(baseColor);
-
-    // Ajustar la opacidad según el valor de ejecutado
-    baseRgb.opacity = colorValue;
-
-    return baseRgb.toString(); // Devuelve el color en formato RGB con la opacidad ajustada
-  };
+  // Reemplazar la función getColor con esto:
 
   return (
     <ChartContainer config={chartConfig} className="relative h-[600px] w-full">
       <svg viewBox="0 0 800 800" className="h-full w-full">
+        <title>Mapa de Argentina</title>
         {features?.map((feature) => {
           const provinciaData = data.find((d) => {
-            return d.provincia?.includes(feature.properties.PROVINCIA);
+            const provincia = removeAccents(d.provincia);
+            const featureProvincia = removeAccents(
+              feature.properties.PROVINCIA
+            );
+
+            return provincia === featureProvincia;
           });
 
-          // Si la provincia tiene datos, obtén el color ajustado, si no, usa un color por defecto
-          console.log("provinciaData", provinciaData);
-
-          const fillColor =
-            provinciaData && typeof provinciaData.ejecutado === "number"
-              ? getColor(
-                  provinciaData.ejecutado,
-                  minValue,
-                  maxValue,
-                  "var(--chart-1)"
-                )
-              : "var(--chart-2)"; // Color por defecto
+          const fillColor = provinciaData?.ejecutado
+            ? getColorWithOpacity(provinciaData.ejecutado)
+            : "rgba(0,0,0,0.1)"; // Color para datos faltantes
 
           return (
             <path
               key={feature.properties.PROVINCIA}
-              d={path(feature) || ""}
+              d={
+                feature.properties.PROVINCIA.includes("Ciudad Autónoma")
+                  ? `translate(20, -20) ${path(feature)}`
+                  : path(feature)
+              }
               fill={fillColor}
               stroke="var(--border)"
               strokeWidth={1}
               onMouseEnter={(e) => {
                 if (provinciaData) {
-                  handleMouseEnter(e, provinciaData);
+                  setTooltipContent(`
+                    <strong>${provinciaData.provincia}</strong>
+                    <div>Ejecutado: ${formatNumber(
+                      provinciaData.ejecutado
+                    )}</div>
+<div>Presupuestado: ${formatNumber(provinciaData.presupuestado)}</div>
+
+                  `);
+                  setTooltipPosition({ x: e.pageX + 15, y: e.pageY - 15 });
+                } else {
+                  setTooltipContent(`
+                    <strong>${feature.properties.PROVINCIA}</strong>
+                    <div>No hay datos disponibles</div>
+                    `);
                 }
               }}
-              onMouseLeave={handleMouseLeave}
+              onMouseLeave={() => setTooltipContent(null)}
             />
           );
         })}
       </svg>
 
       {tooltipContent && (
-        <ChartTooltip
-          content={
-            <ChartTooltipContent position={tooltipPosition}>
-              {tooltipContent}
-            </ChartTooltipContent>
-          }
-        />
+        <div
+          className={"absolute z-50 rounded bg-white p-2 text-sm shadow"}
+          style={{ left: tooltipPosition.x, top: tooltipPosition.y }}
+        >
+          <div dangerouslySetInnerHTML={{ __html: tooltipContent }} />
+        </div>
       )}
     </ChartContainer>
   );

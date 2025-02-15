@@ -1,5 +1,6 @@
 "use server";
 
+import { removeAccents } from "@/lib/utils";
 import type { DondeSeGasta } from "@/types";
 
 const URL =
@@ -20,26 +21,28 @@ export async function getDondeSeGasta(year: string): Promise<{
     const json = await response.json();
 
     // Filtrar y obtener solo las provincias válidas
-    const provincias = json
-      .filter((item: DondeSeGasta) => {
-        const provincia = item.provincia;
-        return (
-          provincia.includes("Provincia de") ||
-          provincia === "Ciudad Autónoma de Buenos Aires"
-        );
-      })
+    const filterProvinces: DondeSeGasta[] = json
       .map((item: DondeSeGasta) => {
-        const separedProvincia = item.provincia.split("Provincia de ")[1];
-        return separedProvincia || item.provincia;
-      });
+        const nameProvincia = item.provincia;
+        const separedProvincia = separedNameProvincia(nameProvincia);
 
-    const newData = json.map((item: DondeSeGasta) => ({
-      ...item,
-      provincia: provincias[item.provincia],
-    }));
+        // Si es CABA, la excluimos
+        if (separedProvincia === null) {
+          return null;
+        }
+
+        return {
+          ...item,
+          provincia: separedProvincia,
+        };
+      })
+      .filter(Boolean) as DondeSeGasta[]; // Filtramos los valores null
+
+    // Ordenar alfabéticamente
+    filterProvinces.sort((a, b) => a.provincia.localeCompare(b.provincia));
 
     return {
-      data: newData,
+      data: filterProvinces,
     };
   } catch (error) {
     console.error(error);
@@ -47,4 +50,24 @@ export async function getDondeSeGasta(year: string): Promise<{
       data: null,
     };
   }
+}
+
+function separedNameProvincia(nameProvincia: string): string | null {
+  const provinciaLimpia = removeAccents(nameProvincia.toUpperCase());
+
+  if (provinciaLimpia.includes("CIUDAD AUTONOMA DE BUENOS AIRES")) {
+    return null; // Indica que debe eliminarse
+  }
+
+  if (
+    provinciaLimpia.includes(
+      "TIERRA DEL FUEGO, ANTARTIDA E ISLAS DEL ATLANTICO SUR"
+    )
+  ) {
+    return "TIERRA DEL FUEGO";
+  }
+
+  return provinciaLimpia
+    .replace(/^PROVINCIA DE /, "")
+    .replace(/^PROVINCIA DEL /, "");
 }
