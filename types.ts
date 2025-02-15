@@ -32,7 +32,7 @@ export interface DondeSeGasta {
 }
 export interface GeoData {
   objects: Objects;
-  type: string;
+  type: "Topology";
   transform: Transform;
   arcs: number[][][];
 }
@@ -48,12 +48,12 @@ interface Objects {
 }
 
 interface Provincias {
-  type: string;
+  type: "GeometryCollection";
   geometries: Geometry2[];
 }
 
 interface Geometry2 {
-  type: string;
+  type: "Polygon | MultiPolygon";
   properties: Properties2;
   arcs: (number[] | number)[][];
 }
@@ -80,4 +80,24 @@ interface Properties {
   d: string;
   p_id: string;
   p: string;
+}
+
+export interface GeojsonProvincias {
+  type: string;
+  features: Feature[];
+}
+
+interface Feature {
+  type: string;
+  properties: Properties;
+  geometry: Geometry;
+}
+
+interface Geometry {
+  type: string | null;
+  coordinates: (number[] | number)[][][];
+}
+
+interface Properties {
+  PROVINCIA: string;
 }
