@@ -1,62 +1,35 @@
-"use client";
-
-import { useState } from "react";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import {} from "@/components/ui/select";
+import { BreadCrumbDynamic } from "@/components/breadcumb-dynamic";
+import { Chart } from "./components/chart";
+import { getIngresoEgresoPIB } from "@/action/ingreso-egreso-sobre-el-pib";
 
-import { Line } from "recharts";
+export default async function CuantoIngresaYCuantoSeGasta() {
+  const data = await getIngresoEgresoPIB();
 
-const data = {
-  labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
-  datasets: [
-    {
-      label: "Ingresos",
-      data: [20, 22, 25, 27, 30, 32],
-      borderColor: "rgb(75, 192, 192)",
-      tension: 0.1,
-    },
-    {
-      label: "Gastos",
-      data: [22, 24, 26, 28, 31, 33],
-      borderColor: "rgb(255, 99, 132)",
-      tension: 0.1,
-    },
-  ],
-};
-
-export default function CuantoIngresaYCuantoSeGasta() {
-  const [year, setYear] = useState(new Date().getFullYear().toString());
+  if (!data) return <div>Loading...</div>;
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 font-bold text-3xl">
-        ¿Cuánto ingresa y cuánto se gasta?
-      </h1>
+      <BreadCrumbDynamic
+        links={[
+          {
+            href: "/",
+            label: "Inicio",
+          },
+          {
+            href: "/cuanto-ingresa-y-cuanto-se-gasta",
+            label: "Cuanto ingresa y cuanto se gasta?",
+          },
+        ]}
+      />
+      <h1 className="mb-8 font-bold text-3xl">¿A qué se destina el gasto?</h1>
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Gastos y recursos en porcentajes del PIB</CardTitle>
+          <CardTitle>Gastos por finalidad y función</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select value={year} onValueChange={setYear}>
-            <SelectTrigger className="mb-4 w-[180px]">
-              <SelectValue placeholder="Seleccionar año" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="2023">2023</SelectItem>
-              <SelectItem value="2024">2024</SelectItem>
-              <SelectItem value="2025">2025</SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="h-[400px] w-full">
-            <Line data={data} />
-          </div>
+          <Chart data={data} />
         </CardContent>
       </Card>
     </main>

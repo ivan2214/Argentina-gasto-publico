@@ -5,6 +5,8 @@ import {} from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -65,6 +67,7 @@ export const Chart = ({ data }: { data: TopSpender[] }) => {
           layout="vertical"
           radius={5}
         />
+        <ChartLegend content={<ChartLegendContent />} />
       </BarChart>
     </ChartContainer>
   );

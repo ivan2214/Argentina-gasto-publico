@@ -38,7 +38,7 @@ const destacados = [
   {
     title: "¿Cuanto ingresa y cuanto se gasta?",
     description: "Gastos y recursos en porcentajes del PIB",
-    link: `/cuanto-ingresa-y-cuanto-se-gasta?year=${new Date().getFullYear()}`,
+    link: "/cuanto-ingresa-y-cuanto-se-gasta",
   },
   {
     title: "¿Para que se gasta?",

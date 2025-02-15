@@ -7,3 +7,10 @@ export interface EntidadPresupuestaria {
   codigoSubjurisdiccion: number;
   ejercicio: number;
 }
+
+export interface IngresoEgresoPIB {
+  ingreso: number;
+  pib: number;
+  gasto: number;
+  ejercicio: number;
+}
