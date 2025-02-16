@@ -15,8 +15,6 @@ export async function getDeDondeVienenLosRecursos(year: string): Promise<{
 			next: { revalidate: 3600 },
 		});
 
-		console.log(response);
-
 		if (!response.ok) {
 			throw new Error("Failed to fetch data");
 		}
