@@ -13,14 +13,18 @@ import type { AQueSeDestinaElGasto } from "@/types";
 
 export function Chart({ data }: { data: AQueSeDestinaElGasto[] }) {
 	const totalEjecutado = data.reduce((sum, item) => sum + item.ejecutado, 0);
+	const totalPresupuestado = data.reduce(
+		(sum, item) => sum + item.presupuestado,
+		0,
+	);
 
 	const processedData = data
 		.map((item) => ({
 			...item,
 			value: item.ejecutado,
 			percentage:
-				totalEjecutado > 0
-					? `${((item.ejecutado / totalEjecutado) * 100).toFixed(1)}%`
+				totalPresupuestado > 0
+					? `${((item.ejecutado / totalPresupuestado) * 100).toFixed(1)}%`
 					: "N/A",
 		}))
 		.filter((item) => item.ejecutado > 0 && item.presupuestado > 0)
