@@ -88,9 +88,9 @@ export function Chart({ data }: { data: AQueSeDestinaElGasto[] }) {
 												</span>
 											</h3>
 											<p className="text-foreground">
-												Funcion:{" "}
+												Porcentaje:{" "}
 												<span className="font-light text-muted-foreground">
-													{data?.funcion}
+													{data?.percentage}
 												</span>
 											</p>
 											<p className="text-foreground">
@@ -99,6 +99,13 @@ export function Chart({ data }: { data: AQueSeDestinaElGasto[] }) {
 													{formatNumber(data?.ejecutado)}
 												</span>
 											</p>
+											<p className="text-foreground">
+												Funcion:{" "}
+												<span className="font-light text-muted-foreground">
+													{data?.funcion}
+												</span>
+											</p>
+
 											<p className="text-foreground">
 												Presupuestado:{" "}
 												<span className="font-light text-muted-foreground">
