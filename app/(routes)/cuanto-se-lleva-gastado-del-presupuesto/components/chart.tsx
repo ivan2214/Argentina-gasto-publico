@@ -2,13 +2,13 @@
 
 import { Bar, BarChart, XAxis } from "recharts";
 
-import {} from "@/components/ui/card";
 import {
 	type ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
+import { formatNumber } from "@/lib/utils";
 
 export type TotalBudget = {
 	ejercicio: number;
@@ -63,7 +63,87 @@ export function Chart({ data }: { data: TotalBudget }) {
 					radius={[4, 4, 0, 0]}
 				/>
 				<ChartTooltip
-					content={<ChartTooltipContent />}
+					content={
+						<ChartTooltipContent
+							formatter={(_value) => ""}
+							labelFormatter={(value, payload) => {
+								const data = payload?.[0]?.payload;
+								return (
+									<div>
+										<h3 className="font-semibold text-primary">
+											Finalidad:{" "}
+											<span className="font-light text-muted-foreground">
+												{value}
+											</span>
+										</h3>
+
+										<p className="text-foreground">
+											Ejecutado:{" "}
+											<span className="font-light text-muted-foreground">
+												{formatNumber(data?.ejecutado)}
+											</span>
+										</p>
+
+										<p className="text-foreground">
+											Presupuestado:{" "}
+											<span className="font-light text-muted-foreground">
+												{formatNumber(data?.presupuestado)}
+											</span>
+										</p>
+										<p className="text-foreground">
+											Año:{" "}
+											<span className="font-light text-muted-foreground">
+												{data?.ejercicio}
+											</span>
+										</p>
+									</div>
+								);
+							}}
+						/>
+					}
+					cursor={false}
+					defaultIndex={1}
+				/>
+
+				<ChartTooltip
+					content={
+						<ChartTooltipContent
+							formatter={(_value) => ""}
+							labelFormatter={(value, payload) => {
+								const data = payload?.[0]?.payload;
+								return (
+									<div>
+										<h3 className="font-semibold text-primary">
+											Finalidad:{" "}
+											<span className="font-light text-muted-foreground">
+												{value}
+											</span>
+										</h3>
+
+										<p className="text-foreground">
+											Ejecutado:{" "}
+											<span className="font-light text-muted-foreground">
+												{formatNumber(data?.ejecutado)}
+											</span>
+										</p>
+
+										<p className="text-foreground">
+											Presupuestado:{" "}
+											<span className="font-light text-muted-foreground">
+												{formatNumber(data?.presupuestado)}
+											</span>
+										</p>
+										<p className="text-foreground">
+											Año:{" "}
+											<span className="font-light text-muted-foreground">
+												{data?.ejercicio}
+											</span>
+										</p>
+									</div>
+								);
+							}}
+						/>
+					}
 					cursor={false}
 					defaultIndex={1}
 				/>
