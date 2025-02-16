@@ -23,10 +23,12 @@ export default async function CuantoIngresaYCuantoSeGasta() {
 					},
 				]}
 			/>
-			<h1 className="mb-8 font-bold text-3xl">¿A qué se destina el gasto?</h1>
+			<h1 className="mb-8 font-bold text-3xl">
+				¿Cuanto ingresa y cuanto se gasta?
+			</h1>
 			<Card className="mb-8">
 				<CardHeader>
-					<CardTitle>Gastos por finalidad y función</CardTitle>
+					<CardTitle>Cuanto ingresa y cuanto se gasta</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<Chart data={data} />

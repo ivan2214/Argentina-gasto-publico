@@ -29,18 +29,16 @@ export default async function DeDondeVienenLosRecursos({
 						label: "Inicio",
 					},
 					{
-						href: `/cuanto-se-lleva-gastado-del-presupuesto?year=${year}`,
-						label: `Cuanto se lleva gastado del presupuesto en ${year}`,
+						href: `/de-donde-vienen-los-recursos?year=${year}`,
+						label: `De donde vienen los recursos en ${year}`,
 					},
 				]}
 			/>
-			<h1 className="font-bold text-3xl">
-				Cuanto se lleva gastado del presupuesto?
-			</h1>
+			<h1 className="font-bold text-3xl">De donde vienen los recursos?</h1>
 
 			<Card>
 				<CardHeader>
-					<CardTitle>Comparación de ejecución vs presupuesto</CardTitle>
+					<CardTitle>Recursos</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<SelectYear defaultValue={year} />
