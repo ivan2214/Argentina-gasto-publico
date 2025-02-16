@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -56,14 +57,16 @@ export default function Home() {
 	const currentYear = new Date().getFullYear();
 
 	return (
-		<main className="container mx-auto px-4 py-8">
-			<h1 className="mb-8 font-bold text-3xl">Presupuesto abierto</h1>
-			<p>
+		<main className="container mx-auto flex flex-col items-center justify-center gap-4 px-4 py-8">
+			<h1 className="font-bold text-3xl">Presupuesto abierto</h1>
+
+			<p className="font-light text-muted-foreground">
 				A través del presupuesto, el Estado Nacional planifica los ingresos que
 				recibirá y cómo se aplicarán para satisfacer las necesidades de la
 				población.
 			</p>
-			<span>Explorá este sitio para conocerlo en detalle.</span>
+			<Badge>Explorá este sitio para conocerlo en detalle.</Badge>
+
 			<section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 				{destacados.map((destacado) => (
 					<Card key={destacado.title}>
