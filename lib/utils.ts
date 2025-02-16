@@ -16,18 +16,15 @@ export const formatNumber = (num: ValueType) =>
 		maximumFractionDigits: 2,
 	}).format(num as number);
 
-export function hexToRgb(hex: string): string {
-	// Crear una copia de la cadena para evitar modificar el parámetro directamente
-	const hexColor = hex.replace("#", "");
+export function hexToRgba(hex: string, opacity: number) {
+	// Remueve el "#" si existe
+	const newHex = hex.replace(/^#/, "");
 
-	// Verificar si el formato es 6 dígitos (RR GG BB)
-	if (hexColor.length === 6) {
-		const r = Number.parseInt(hexColor.substring(0, 2), 16);
-		const g = Number.parseInt(hexColor.substring(2, 4), 16);
-		const b = Number.parseInt(hexColor.substring(4, 6), 16);
-		return `rgb(${r}, ${g}, ${b})`;
-	}
+	// Convierte hex a valores RGB
+	const r = Number.parseInt(newHex.substring(0, 2), 16);
+	const g = Number.parseInt(newHex.substring(2, 4), 16);
+	const b = Number.parseInt(newHex.substring(4, 6), 16);
 
-	// Si el formato no es válido, devolver un color por defecto
-	return "rgb(0, 0, 0)";
+	// Retorna el valor en rgba
+	return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }

@@ -8,7 +8,7 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatNumber, hexToRgb } from "@/lib/utils";
+import { formatNumber, hexToRgba } from "@/lib/utils";
 import type { AQueSeDestinaElGasto } from "@/types";
 
 export function Chart({ data }: { data: AQueSeDestinaElGasto[] }) {
@@ -31,12 +31,18 @@ export function Chart({ data }: { data: AQueSeDestinaElGasto[] }) {
 		if (typeof window !== "undefined") {
 			const cssColor = getComputedStyle(
 				document.documentElement,
-			).getPropertyValue(`--chart-${(index % 10) + 1}`);
-			if (cssColor) colorBase = cssColor.trim();
+			).getPropertyValue(`--chart-${(index % 5) + 1}`);
+			if (cssColor?.trim()) {
+				colorBase = cssColor.trim();
+			}
 		}
-		const rgbColor = hexToRgb(colorBase) || "rgb(100, 100, 100)";
-		const opacity = Math.max(1 - index * 0.1, 0.2);
-		const color = `${rgbColor.replace("rgb", "rgba").slice(0, -1)}, ${opacity})`;
+
+		// Calculamos la opacidad de forma progresiva
+		const opacity = Math.max(1 - index * 0.05, 0.6);
+
+		// Convertimos HEX a RGBA con la opacidad deseada
+		const color = hexToRgba(colorBase, opacity);
+
 		acc[item.finalidad] = {
 			label: item.finalidad,
 			color,
