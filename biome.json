@@ -38,7 +38,8 @@
 				"useExhaustiveDependencies": "warn",
 				"noUnusedFunctionParameters": "error",
 				"noUnusedImports": "error",
-				"noEmptyPattern": "off"
+				"noEmptyPattern": "off",
+				"noUnusedVariables": "error"
 			},
 			"style": {},
 			"nursery": {

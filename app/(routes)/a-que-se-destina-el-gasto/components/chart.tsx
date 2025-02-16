@@ -12,7 +12,6 @@ import { formatNumber, hexToRgba } from "@/lib/utils";
 import type { AQueSeDestinaElGasto } from "@/types";
 
 export function Chart({ data }: { data: AQueSeDestinaElGasto[] }) {
-	const totalEjecutado = data.reduce((sum, item) => sum + item.ejecutado, 0);
 	const totalPresupuestado = data.reduce(
 		(sum, item) => sum + item.presupuestado,
 		0,

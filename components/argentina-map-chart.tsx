@@ -28,7 +28,7 @@ export function ArgentinaMapChart({ data, geoData }: ArgentinaMapChartProps) {
 	const [tooltipContent, setTooltipContent] = useState<React.ReactNode>(null);
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
-	const { opacityScale, path, features, maxValue, minValue } = useMemo(() => {
+	const { opacityScale, path, features } = useMemo(() => {
 		if (!data || !geoData?.objects.provincias)
 			return {
 				opacityScale: null,

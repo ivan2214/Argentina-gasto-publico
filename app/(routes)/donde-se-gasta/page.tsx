@@ -4,16 +4,6 @@ import { getDondeSeGasta } from "@/action/donde-se-gasta";
 import { SelectYear } from "@/components/SelectYear";
 import { ArgentinaMapChart } from "@/components/argentina-map-chart";
 
-const geoUrl =
-	"https://raw.githubusercontent.com/deldersveld/topojson/master/countries/argentina/argentina-provinces.json";
-
-const data = [
-	{ id: "AR-B", value: 1000000 },
-	{ id: "AR-C", value: 5000000 },
-	{ id: "AR-K", value: 500000 },
-	// Add more data for other provinces
-];
-
 type SearchParams = Promise<{ year?: string }>;
 
 export default async function DondeSeGasta({

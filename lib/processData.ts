@@ -1,4 +1,4 @@
-import type { TotalBudget } from "@/components/BudgetComparisonChart";
+import type { TotalBudget } from "@/app/(routes)/cuanto-se-lleva-gastado-del-presupuesto/components/chart";
 import type { EntidadPresupuestaria } from "@/types";
 
 export function processSpendingData(data: EntidadPresupuestaria[]) {

@@ -54,8 +54,6 @@ const destacados = [
 ];
 
 export default function Home() {
-	const currentYear = new Date().getFullYear();
-
 	return (
 		<main className="container mx-auto flex flex-col items-center justify-center gap-4 px-4 py-8">
 			<h1 className="font-bold text-3xl">Presupuesto abierto</h1>
