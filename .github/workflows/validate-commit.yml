@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: "22.13.1"
 
+      - name: Instalar dependencias del sistema
+        run: sudo apt-get update && sudo apt-get install -y curl bash
+
       - name: Instalar Bun
         run: |
           curl -fsSL https://bun.sh/install | bash
