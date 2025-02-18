@@ -8,7 +8,14 @@ import {
 } from "@/components/ui/card";
 import { destacados } from "@/constants";
 import { ArrowRight, Github } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+	title: "Presupuesto Abierto Argentino - Transparencia en el Gasto Público",
+	description:
+		"Bienvenido a la plataforma de visualización del gasto público argentino. Nuestro objetivo es hacer transparente y accesible la información presupuestaria para todos los ciudadanos.",
+};
 
 export default function Home() {
 	return (

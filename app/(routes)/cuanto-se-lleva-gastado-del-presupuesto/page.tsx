@@ -1,11 +1,28 @@
+// routes/[carpeta-nombre-pagina]/page.tsx
 import { getPresupuesto } from "@/action/quien-gasta";
 import { SelectYear } from "@/components/SelectYear";
-import { BreadCrumbDynamic } from "@/components/breadcumb-dynamic";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { processSpendingData } from "@/lib/processData";
+import type { Metadata } from "next";
+import Layout from "../layout";
 import { Chart } from "./components/chart";
 
 type SearchParams = Promise<{ year?: string }>;
+export const metadata: Metadata = {
+	title: "¿Cuánto se lleva gastado del presupuesto?",
+	description:
+		"Seguimiento de la ejecución presupuestaria y gasto acumulado en Argentina.",
+	openGraph: {
+		title: "¿Cuánto se lleva gastado del presupuesto?",
+		description:
+			"Monitoriza el progreso del gasto respecto al presupuesto aprobado en Argentina.",
+		url: "https://tusitio.com/cuanto-se-lleva-gastado-del-presupuesto",
+	},
+	twitter: {
+		title: "¿Cuánto se lleva gastado del presupuesto?",
+		description:
+			"Datos actualizados sobre la ejecución del presupuesto en Argentina.",
+	},
+};
 
 export default async function CuantoSeLlevaGastadoDelPresupuesto({
 	searchParams,
@@ -25,32 +42,20 @@ export default async function CuantoSeLlevaGastadoDelPresupuesto({
 	const { totals } = processSpendingData(data);
 
 	return (
-		<main className="container mx-auto px-4 py-8">
-			<BreadCrumbDynamic
-				links={[
-					{
-						href: "/",
-						label: "Inicio",
-					},
-					{
-						href: `/cuanto-se-lleva-gastado-del-presupuesto?year=${year}`,
-						label: `Cuanto se lleva gastado del presupuesto en ${year}`,
-					},
-				]}
-			/>
-			<h1 className="font-bold text-3xl">
-				Cuanto se lleva gastado del presupuesto?
-			</h1>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>Comparación de ejecución vs presupuesto</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<SelectYear defaultValue={year} />
-					<Chart data={totals} />
-				</CardContent>
-			</Card>
-		</main>
+		<Layout
+			breadcrumbLinks={[
+				{ href: "/", label: "Inicio" },
+				{
+					href: `/cuanto-se-lleva-gastado-del-presupuesto?year=${year}`,
+					label: `Cuanto se lleva gastado del presupuesto en ${year}`,
+				},
+			]}
+			title={`Cuanto se lleva gastado del presupuesto en ${year}`}
+		>
+			<section className="mx-auto w-full max-w-4xl rounded-lg border p-4">
+				<SelectYear defaultValue={year} />
+				<Chart data={totals} />
+			</section>
+		</Layout>
 	);
 }
