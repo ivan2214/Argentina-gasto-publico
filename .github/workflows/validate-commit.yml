@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - main
-      - develop # O cualquier rama en la que quieras aplicar la validación
-  workflow_dispatch: # Esto permite ejecutar la acción manualmente desde la interfaz de GitHub
+      - develop
+  workflow_dispatch:
 
 jobs:
   lint-and-test:
@@ -23,14 +23,23 @@ jobs:
       - name: Instalar Bun
         run: |
           curl -fsSL https://bun.sh/install | bash
+        env:
+          BUN_INSTALL: "$HOME/.bun"
+          PATH: "$BUN_INSTALL/bin:$PATH"
 
       - name: Instalar dependencias
         run: |
           bun install
+        env:
+          BUN_INSTALL: "$HOME/.bun"
+          PATH: "$BUN_INSTALL/bin:$PATH"
 
       - name: Ejecutar Biome
         run: |
           bun run check
+        env:
+          BUN_INSTALL: "$HOME/.bun"
+          PATH: "$BUN_INSTALL/bin:$PATH"
 
       - name: Ejecutar Commitlint
         run: |
