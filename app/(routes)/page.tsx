@@ -13,7 +13,7 @@ import Link from "next/link";
 export default function Home() {
 	return (
 		<main className="container mx-auto flex flex-col items-center justify-center gap-6 px-4 py-8">
-			<section className="flex w-full items-center justify-between gap-5 p-5">
+			<section className="flex w-full flex-col gap-5 p-5 md:flex-row md:items-center md:justify-between md:gap-5">
 				<div className="space-y-2">
 					<h1 className="text-center font-bold text-4xl">
 						Presupuesto Abierto Argentino
