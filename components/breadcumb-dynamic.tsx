@@ -41,7 +41,7 @@ export const BreadCrumbDynamic: React.FC<BreadCrumbDynamicProps> = ({
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
 	// Calcula dinámicamente cuántos ítems mostrar antes de colapsar
-	const itemsToDisplay = Math.min(links.length, 3); // Mínimo 2, máximo 3 visibles
+	const itemsToDisplay = Math.min(links.length, 2); // Mínimo 2, máximo 3 visibles
 
 	return (
 		<Breadcrumb>
@@ -106,24 +106,24 @@ export const BreadCrumbDynamic: React.FC<BreadCrumbDynamicProps> = ({
 						<BreadcrumbSeparator />
 					</>
 				) : null}
-				{links.slice(-itemsToDisplay + 1).map((link) => (
-					<BreadcrumbItem key={link.label}>
-						{link.href ? (
-							<>
+				{links.slice(-itemsToDisplay + 1).map((link, index, arr) => (
+					<React.Fragment key={link.label}>
+						<BreadcrumbItem>
+							{link.href ? (
 								<BreadcrumbLink
 									asChild
 									className="max-w-20 truncate md:max-w-none"
 								>
 									<Link href={link.href}>{link.label}</Link>
 								</BreadcrumbLink>
-								<BreadcrumbSeparator />
-							</>
-						) : (
-							<BreadcrumbPage className="max-w-20 truncate md:max-w-none">
-								{link.label}
-							</BreadcrumbPage>
-						)}
-					</BreadcrumbItem>
+							) : (
+								<BreadcrumbPage className="max-w-20 truncate md:max-w-none">
+									{link.label}
+								</BreadcrumbPage>
+							)}
+						</BreadcrumbItem>
+						{index < arr.length - 1 && <BreadcrumbSeparator />}
+					</React.Fragment>
 				))}
 			</BreadcrumbList>
 		</Breadcrumb>
