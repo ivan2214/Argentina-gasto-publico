@@ -4,8 +4,9 @@ on:
   pull_request:
     branches:
       - main
-      - develop
-  workflow_dispatch:
+      - develop  # O cualquier rama en la que quieras aplicar la validación
+  workflow_dispatch:  # Esto permite ejecutar la acción manualmente desde la interfaz de GitHub
+
 
 jobs:
   lint-and-test:
@@ -18,48 +19,39 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "22.13.1"
+          node-version: '22.13.1'
 
-      - name: Verificar si curl y bash están instalados
-        run: |
-          which curl || echo "curl no está instalado"
-          which bash || echo "bash no está instalado"
-
-      - name: Instalar dependencias del sistema
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl bash
-          exec bash  # Reiniciar shell para aplicar cambios
-
-      - name: Verificar instalación de curl y bash
-        run: |
-          which curl
-          which bash
-
-      - name: Instalar Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-        env:
-          BUN_INSTALL: "$HOME/.bun"
-          PATH: "$BUN_INSTALL/bin:$PATH"
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '10.2.0'  # Especifica la versión de pnpm que utilizas
 
       - name: Instalar dependencias
         run: |
-          bun install
-        env:
-          BUN_INSTALL: "$HOME/.bun"
-          PATH: "$BUN_INSTALL/bin:$PATH"
+          pnpm install
 
       - name: Ejecutar Biome
         run: |
-          bun run check
-        env:
-          BUN_INSTALL: "$HOME/.bun"
-          PATH: "$BUN_INSTALL/bin:$PATH"
+          pnpm run check
 
       - name: Ejecutar Commitlint
         run: |
-          if [ $(git rev-list --count HEAD) -gt 1 ]; then
-            npx commitlint --from=HEAD~1 --to=HEAD --verbose
-          else
-            echo "
+            if [ $(git rev-list --count HEAD) -gt 1 ]; then
+              npx commitlint --from=HEAD~1 --to=HEAD --verbose
+            else
+              echo "Solo un commit en el historial, omitiendo Commitlint."
+            fi
+        
+
+      - name: Verificar errores de linting
+        run: |
+              if git log --oneline | wc -l | grep -q '1'; then
+                echo "Solo un commit en el historial, omitiendo linting";
+              else
+                if git diff --quiet HEAD^ HEAD; then
+                  echo "No se detectaron cambios en el código, omitiendo linting";
+                else
+                  pnpm run lint;
+                fi
+              fi
+          
