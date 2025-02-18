@@ -1,11 +1,12 @@
 "use client";
 
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { formatNumber, removeAccents } from "@/lib/utils";
+import { cn, formatNumber, removeAccents } from "@/lib/utils";
 import type { DondeSeGasta, GeoData, GeojsonProvincias } from "@/types";
 import { rgb } from "d3-color";
 import { geoMercator, geoPath } from "d3-geo";
 import { scaleLinear } from "d3-scale";
+import { BarChart, MapPinIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { feature } from "topojson-client";
 import type { Objects, Topology } from "topojson-specification";
@@ -98,15 +99,36 @@ export function ArgentinaMapChart({ data, geoData }: ArgentinaMapChartProps) {
 	const handleMouseMove = (e: React.MouseEvent, provincia?: DondeSeGasta) => {
 		if (!provincia) return;
 
+		const isPastPresupuestado = provincia.presupuestado < provincia.ejecutado;
+
 		setTooltipContent(
 			<div className="flex flex-col gap-2">
-				<div className="font-semibold text-lg">{provincia.provincia}</div>
-				<div className="flex flex-row gap-2">
-					<div className="font-semibold text-sm">Ejecutado:</div>
-					<div className="text-sm">{formatNumber(provincia.ejecutado)}</div>
+				<div className="flex items-center gap-1">
+					<MapPinIcon className="h-4 w-4" />
+					<h3 className="font-semibold text-lg">{provincia.provincia}</h3>
 				</div>
-				<div className="flex flex-row gap-2">
-					<div className="font-semibold text-sm">Presupuestado:</div>
+				<div
+					className={cn(
+						"flex flex-row gap-2",
+						isPastPresupuestado ? "text-red-500" : "text-green-500",
+					)}
+				>
+					<div className="flex items-center gap-1">
+						<BarChart className="h-4 w-4" />
+						<h3 className="font-semibold text-sm">Ejecutado:</h3>
+					</div>
+					<h3 className="text-sm">{formatNumber(provincia.ejecutado)}</h3>
+				</div>
+				<div
+					className={cn(
+						"flex flex-row gap-2",
+						isPastPresupuestado ? "text-red-500" : "text-green-500",
+					)}
+				>
+					<div className="flex items-center gap-1 ">
+						<BarChart className="h-4 w-4" />
+						<h3 className="font-semibold text-sm">Presupuestado:</h3>
+					</div>
 					<div className="text-sm">{formatNumber(provincia.presupuestado)}</div>
 				</div>
 			</div>,
@@ -164,7 +186,7 @@ export function ArgentinaMapChart({ data, geoData }: ArgentinaMapChartProps) {
 				tooltipContent !== null &&
 				tooltipContent !== undefined && (
 					<div
-						className="pointer-events-none fixed rounded-lg border bg-white p-3 shadow-lg"
+						className="pointer-events-none fixed rounded-lg border bg-white p-3 shadow-lg dark:border-border dark:bg-background"
 						style={{
 							left: `${tooltipPosition.x}px`,
 							top: `${tooltipPosition.y}px`,
