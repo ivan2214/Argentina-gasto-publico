@@ -1,7 +1,6 @@
 "use client";
-import { Bar, BarChart, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import {} from "@/components/ui/card";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -34,39 +33,40 @@ const chartConfig = {
 export const Chart = ({ data }: { data: TopSpender[] }) => {
 	return (
 		<ChartContainer config={chartConfig}>
-			<BarChart
-				accessibilityLayer
-				data={data}
-				layout="vertical"
-				margin={{ left: 0, right: 20 }}
-				barGap={10}
-			>
-				<YAxis
+			<BarChart accessibilityLayer data={data}>
+				<CartesianGrid vertical={false} />
+				<XAxis
 					dataKey="entidad"
-					type="category"
 					tickLine={false}
+					tickMargin={10}
 					axisLine={false}
-					width={200}
+					type="category"
+					tickFormatter={(value) => {
+						// Dividir por espacios y tomar la primera palabra
+						const words = value.split(" ");
+						if (words.length > 1) {
+							// Si hay más de una palabra, devolver iniciales de cada una
+							return words
+								.map((w: string) => w.charAt(0).toUpperCase())
+								.join("");
+						}
+						const newLocal = `${words[0].slice(0, 10)}…`;
+						// Si es una sola palabra, acortarla si es muy larga
+						return words[0].length > 10 ? newLocal : words[0];
+					}}
 				/>
 
-				<XAxis dataKey="presupuestado" type="number" hide />
 				<ChartTooltip
 					cursor={false}
-					content={<ChartTooltipContent hideLabel />}
+					content={<ChartTooltipContent indicator="dashed" />}
 				/>
-				<XAxis dataKey="ejecutado" type="number" hide />
+
 				<Bar
-					fill="var(--color-presupuestado)"
 					dataKey="presupuestado"
-					layout="vertical"
-					radius={5}
+					fill="var(--color-presupuestado)"
+					radius={4}
 				/>
-				<Bar
-					fill="var(--color-ejecutado)"
-					dataKey="ejecutado"
-					layout="vertical"
-					radius={5}
-				/>
+				<Bar dataKey="ejecutado" fill="var(--color-ejecutado)" radius={4} />
 				<ChartLegend content={<ChartLegendContent />} />
 			</BarChart>
 		</ChartContainer>
