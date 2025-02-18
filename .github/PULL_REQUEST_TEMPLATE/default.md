@@ -35,7 +35,6 @@
 - [ ] Sí
 - [ ] No
 
-
 ## ¿Corrio anteriormente el comando `bun run check:fix`?
 
 - [ ] Sí
