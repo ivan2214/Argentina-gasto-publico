@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Argentina Gasto Público
 
-## Getting Started
+Este es un proyecto open source que consume la API de Presupuesto Abierto de Argentina para visualizar datos sobre el gasto público. Está construido con **Next.js**, **TypeScript**, **ShadCN**, **TailwindCSS** y **Bun**.
 
-First, run the development server:
+## 🚀 Características
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Visualización de datos del gasto público argentino.
+- Interfaz moderna y responsiva.
+- Uso de gráficos interactivos con **Recharts**.
+- Mapa de Argentina para representar datos geográficos.
+- Código limpio y estructurado con **Conventional Commits** y **BiomeJS**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tecnologías
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js** (Framework de React)
+- **TypeScript**
+- **ShadCN** (Componentes UI)
+- **TailwindCSS** (Estilos)
+- **Bun** (Runtime)
+- **Recharts** (Gráficos)
+- **Conventional Commits** (Formateo y linting)
+- **BiomeJS** (Formateo y linting)
+- **ShadCN** (Componentes UI)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Instalación y ejecución
 
-## Learn More
+1. Clonar el repositorio:
 
-To learn more about Next.js, take a look at the following resources:
+   ```sh
+   git clone https://github.com/ivan2214/Argentina-gasto-publico.git
+   cd Argentina-gasto-publico
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Instalar dependencias:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```sh
+   bun install
+   ```
 
-## Deploy on Vercel
+3. Ejecutar el proyecto en modo desarrollo:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```sh
+   bun dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Abrir en el navegador: `http://localhost:3000`
+
+## 🤝 Contribuir
+
+Las contribuciones son bienvenidas. Sigue las pautas establecidas en [`CONTRIBUTING.md`](CONTRIBUTING.md) para garantizar un flujo de trabajo ordenado.
+
+## 📄 Licencia
+Este proyecto está bajo la licencia **GPLv3**. Consulta el archivo [`LICENSE`](LICENSE) para más detalles.
