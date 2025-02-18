@@ -1,25 +1,41 @@
-name: Crear PR de develop a main
+name: Auto Create PR from develop to main
 
 on:
-  pull_request:
+  push:
     branches:
       - develop
-    types:
-      - closed
 
 jobs:
   create-pr:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true  # Asegura que el PR ha sido fusionado
     steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
-      - name: Crear Pull Request de develop a main
-        uses: peter-evans/create-pull-request@v7
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'Actualización automática desde develop'
-          title: 'Merge automático: develop → main'
-          body: 'Este PR se ha generado automáticamente tras el merge de una feature en develop, y se requiere su integración en main.'
-          base: main
-          branch: develop
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Check if PR to main is already open
+        id: check-pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if a PR from develop to main already exists
+          existing_pr=$(gh pr list --base main --head develop --state open --json number --jq length)
+          echo "existing_pr=$existing_pr" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request to main
+        if: steps.check-pr.outputs.existing_pr == 0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create PR using GitHub CLI
+          gh pr create \
+            --base main \
+            --head develop \
+            --title "Merge develop into main" \
+            --body "Automated PR to merge latest changes from develop branch into main branch."
