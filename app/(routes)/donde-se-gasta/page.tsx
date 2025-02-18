@@ -1,10 +1,28 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+// routes/[carpeta-nombre-pagina]/page.tsx
 import { getDondeSeGasta } from "@/action/donde-se-gasta";
 import { SelectYear } from "@/components/SelectYear";
 import { ArgentinaMapChart } from "@/components/argentina-map-chart";
+import type { Metadata } from "next";
+import Layout from "../layout";
 
 type SearchParams = Promise<{ year?: string }>;
+
+export const metadata: Metadata = {
+	title: "¿Dónde se gasta?",
+	description:
+		"Distribución geográfica del gasto público en las distintas provincias de Argentina.",
+	openGraph: {
+		title: "¿Dónde se gasta?",
+		description:
+			"Visualiza cómo se distribuye el gasto público en las diferentes regiones de Argentina.",
+		url: "https://tusitio.com/donde-se-gasta",
+	},
+	twitter: {
+		title: "¿Dónde se gasta?",
+		description:
+			"Mapa interactivo del gasto público por provincia en Argentina.",
+	},
+};
 
 export default async function DondeSeGasta({
 	searchParams,
@@ -27,29 +45,20 @@ export default async function DondeSeGasta({
 	const geoData = await response.json();
 
 	return (
-		<main className="container mx-auto px-4 py-8">
-			{/* <BreadCrumbDynamic
-        links={[
-          {
-            href: "/",
-            label: "Inicio",
-          },
-          {
-            href: `/donde-se-gasta?year=${year}`,
-            label: `Donde se gasta en ${year}`,
-          },
-        ]}
-      /> */}
-			<h1 className="mb-8 font-bold text-3xl">¿Dónde se gasta?</h1>
-			<Card className="mb-8">
-				<CardHeader>
-					<CardTitle>Gastos por ubicación geográfica</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<SelectYear defaultValue={year} />
-					<ArgentinaMapChart data={data} geoData={geoData} />
-				</CardContent>
-			</Card>
-		</main>
+		<Layout
+			breadcrumbLinks={[
+				{ href: "/", label: "Inicio" },
+				{
+					href: `/donde-se-gasta?year=${year}`,
+					label: `Donde se gasta en ${year}`,
+				},
+			]}
+			title={`Donde se gasta en ${year}`}
+		>
+			<section className="mx-auto w-full max-w-4xl rounded-lg border p-4">
+				<SelectYear defaultValue={year} />
+				<ArgentinaMapChart data={data} geoData={geoData} />
+			</section>
+		</Layout>
 	);
 }

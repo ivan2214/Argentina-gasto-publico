@@ -1,10 +1,28 @@
 import { getAqueSeDestinaElGasto } from "@/action/a-que-se-destina-el-gasto";
 import { SelectYear } from "@/components/SelectYear";
-import { BreadCrumbDynamic } from "@/components/breadcumb-dynamic";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Layout from "../layout";
 import { Chart } from "./components/chart";
 
 type SearchParams = Promise<{ year?: string }>;
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "¿A qué se destina el gasto?",
+	description:
+		"Análisis detallado de la asignación del gasto público en Argentina.",
+	openGraph: {
+		title: "¿A qué se destina el gasto?",
+		description:
+			"Explora cómo se distribuye el gasto público en diferentes sectores en Argentina.",
+		url: "https://tusitio.com/a-que-se-destina-el-gasto",
+	},
+	twitter: {
+		title: "¿A qué se destina el gasto?",
+		description:
+			"Descubre la distribución del gasto público en Argentina por sectores.",
+	},
+};
 
 export default async function AQueSeDestinaElGasto({
 	searchParams,
@@ -22,29 +40,20 @@ export default async function AQueSeDestinaElGasto({
 	if (!data) return <div>Loading...</div>;
 
 	return (
-		<main className="container mx-auto px-4 py-8">
-			<BreadCrumbDynamic
-				links={[
-					{
-						href: "/",
-						label: "Inicio",
-					},
-					{
-						href: `/a-que-se-destina-el-gasto?year=${year}`,
-						label: `A que se destina el gasto en ${year}`,
-					},
-				]}
-			/>
-			<h1 className="mb-8 font-bold text-3xl">¿A qué se destina el gasto?</h1>
-			<Card className="mb-8">
-				<CardHeader>
-					<CardTitle>Gastos por finalidad y función</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<SelectYear defaultValue={year} />
-					<Chart data={data} />
-				</CardContent>
-			</Card>
-		</main>
+		<Layout
+			breadcrumbLinks={[
+				{ href: "/", label: "Inicio" },
+				{
+					href: `/a-que-se-destina-el-gasto?year=${year}`,
+					label: `A que se destina el gasto en ${year}`,
+				},
+			]}
+			title={`A que se destina el gasto en ${year}`}
+		>
+			<section className="mx-auto w-full max-w-4xl rounded-lg border p-4">
+				<SelectYear defaultValue={year} />
+				<Chart data={data} />
+			</section>
+		</Layout>
 	);
 }

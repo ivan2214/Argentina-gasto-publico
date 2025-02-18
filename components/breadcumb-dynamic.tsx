@@ -40,8 +40,10 @@ export const BreadCrumbDynamic: React.FC<BreadCrumbDynamicProps> = ({
 	const [open, setOpen] = React.useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
+	if (!links) return null;
+
 	// Calcula dinámicamente cuántos ítems mostrar antes de colapsar
-	const itemsToDisplay = Math.min(links.length, 2); // Mínimo 2, máximo 3 visibles
+	const itemsToDisplay = Math.min(links?.length, 2); // Mínimo 2, máximo 3 visibles
 
 	return (
 		<Breadcrumb>
