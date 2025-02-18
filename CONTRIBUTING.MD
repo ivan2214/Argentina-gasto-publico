@@ -42,6 +42,12 @@ Ejemplo:
  git commit -m "fix: corregir error en carga de datos"
 ```
 
+## 🔍 Para saber más sobre Conventional Commits
+[URL](https://www.conventionalcommits.org/en/v1.0.0/)
+
+## 📝 Recomiendo usar la extension Conventional Commits
+[URL](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits)
+
 ## 📩 Contacto
 
 Si tienes dudas, abre un **Issue** o contáctame en GitHub.
