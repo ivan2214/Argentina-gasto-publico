@@ -1,13 +1,16 @@
 name: Crear PR de develop a main
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
+    types:
+      - closed
 
 jobs:
   create-pr:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true  # Asegura que el PR ha sido fusionado
     steps:
       - name: Clonar el repositorio
         uses: actions/checkout@v3
