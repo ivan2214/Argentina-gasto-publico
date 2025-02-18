@@ -1,0 +1,48 @@
+name: Auto PR Template
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+jobs:
+  apply-template:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract branch prefix
+        id: get_prefix
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          PREFIX=$(echo "$BRANCH_NAME" | cut -d '/' -f1 | tr '[:upper:]' '[:lower:]')
+          echo "prefix=${PREFIX}" >> $GITHUB_OUTPUT
+
+      - name: Select template
+        id: select_template
+        run: |
+          TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE/${{ steps.get_prefix.outputs.prefix }}.md"
+          
+          if [ -f "$TEMPLATE_PATH" ]; then
+            CONTENT=$(cat $TEMPLATE_PATH)
+          else
+            CONTENT=$(cat .github/PULL_REQUEST_TEMPLATE/default.md)
+          fi
+
+          # Escape newlines and quotes for JSON
+          CONTENT_ESCAPED=$(echo "$CONTENT" | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/"/\\"/g')
+          echo "content=${CONTENT_ESCAPED}" >> $GITHUB_OUTPUT
+
+      - name: Update PR description
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              body: "${{ steps.select_template.outputs.content }}"
+            })
