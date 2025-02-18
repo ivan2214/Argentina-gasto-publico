@@ -12,7 +12,7 @@ const NavDesktop = () => {
 
 	return (
 		<nav
-			className="ml-auto hidden max-w-3xl overflow-x-auto whitespace-nowrap pb-2 md:flex"
+			className="ml-auto hidden max-w-3xl overflow-x-auto whitespace-nowrap md:flex"
 			style={{
 				scrollBehavior: "smooth",
 				scrollbarWidth: "thin",
