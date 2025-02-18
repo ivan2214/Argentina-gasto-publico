@@ -9,11 +9,6 @@
 		"start": "next start",
 		"check": "biome check --write",
 		"check:fix": "biome check --fix",
-		"prisma:migrate": "pnpm dlx prisma migrate dev",
-		"prisma:reset": "pnpm dlx prisma migrate reset --force",
-		"prisma:generate": "pnpm dlx prisma generate",
-		"prisma:seed": "pnpm dlx prisma db seed",
-		"prisma:studio": "pnpm dlx prisma studio",
 		"prepare": "husky"
 	},
 	"dependencies": {
