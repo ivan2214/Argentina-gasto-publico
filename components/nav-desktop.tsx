@@ -18,15 +18,14 @@ const NavDesktop = () => {
 				{destacados.map((item) => {
 					if (item.link !== "/auth/login" && item.link !== "/auth/register") {
 						return (
-							<Link key={item.title} href={item.link}>
-								<Button
-									size="sm"
-									className="transition-colors duration-300 hover:text-primary"
-									variant="ghost"
-								>
-									{item.title}
-								</Button>
-							</Link>
+							<Button
+								key={item.title}
+								size="sm"
+								className="transition-colors duration-300 hover:text-primary"
+								variant="ghost"
+							>
+								<Link href={item.link}>{item.title}</Link>
+							</Button>
 						);
 					}
 				})}
