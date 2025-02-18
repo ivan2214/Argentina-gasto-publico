@@ -1,8 +1,8 @@
+// routes/[carpeta-nombre-pagina]/page.tsx
 import { getPresupuesto } from "@/action/quien-gasta";
 import { SelectYear } from "@/components/SelectYear";
-import { BreadCrumbDynamic } from "@/components/breadcumb-dynamic";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { processSpendingData } from "@/lib/processData";
+import Layout from "../layout";
 import { Chart } from "./components/chart";
 
 type SearchParams = Promise<{ year?: string }>;
@@ -25,32 +25,18 @@ export default async function CuantoSeLlevaGastadoDelPresupuesto({
 	const { totals } = processSpendingData(data);
 
 	return (
-		<main className="container mx-auto px-4 py-8">
-			<BreadCrumbDynamic
-				links={[
-					{
-						href: "/",
-						label: "Inicio",
-					},
-					{
-						href: `/cuanto-se-lleva-gastado-del-presupuesto?year=${year}`,
-						label: `Cuanto se lleva gastado del presupuesto en ${year}`,
-					},
-				]}
-			/>
-			<h1 className="font-bold text-3xl">
-				Cuanto se lleva gastado del presupuesto?
-			</h1>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>Comparación de ejecución vs presupuesto</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<SelectYear defaultValue={year} />
-					<Chart data={totals} />
-				</CardContent>
-			</Card>
-		</main>
+		<Layout
+			breadcrumbLinks={[
+				{ href: "/", label: "Inicio" },
+				{
+					href: `/cuanto-se-lleva-gastado-del-presupuesto?year=${year}`,
+					label: `Cuanto se lleva gastado del presupuesto en ${year}`,
+				},
+			]}
+			title={`Cuanto se lleva gastado del presupuesto en ${year}`}
+		>
+			<SelectYear defaultValue={year} />
+			<Chart data={totals} />
+		</Layout>
 	);
 }
