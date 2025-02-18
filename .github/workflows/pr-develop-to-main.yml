@@ -1,0 +1,22 @@
+name: Crear PR de develop a main
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+      - name: Crear Pull Request de develop a main
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Actualización automática desde develop'
+          title: 'Merge automático: develop → main'
+          body: 'Este PR se ha generado automáticamente tras el merge de una feature en develop, y se requiere su integración en main.'
+          base: main
+          branch: develop
